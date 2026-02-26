@@ -26,7 +26,7 @@ It supports user authentication (register, login, profile), JWT authentication, 
 
 ## 🗂️ Project Structure
 
-```
+---
 
 OLMS-Online-Learning-Management-System/
 │
@@ -55,7 +55,7 @@ OLMS-Online-Learning-Management-System/
 ├── requirements.txt
 └── manage.py
 
-```
+---
 
 ---
 
