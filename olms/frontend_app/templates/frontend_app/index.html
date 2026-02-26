@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCMS - Premium Online Learning</title>
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'frontend_app/css/style.css' %}">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>OCMS</span>
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}" class="active">Home</a></li>
+                <li><a href="{% url 'courses' %}">Courses</a></li>
+                <li><a href="{% url 'reviews' %}">Reviews</a></li>
+                <li><a href="{% url 'enrollments' %}">Enrollments</a></li>
+            </ul>
+
+            <!-- Auth Buttons -->
+            <div class="nav-auth" id="nav-auth-container">
+                <a href="{% url 'login' %}" class="btn btn-outline">Log In</a>
+                <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
+            </div>
+
+            <!-- Logged In User Menu (Hidden by default) -->
+            <div class="nav-auth" id="nav-user-menu" style="display: none;">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Dashboard</a>
+                <button onclick="logout()" class="btn btn-primary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero container">
+        <div class="hero-content">
+            <span class="hero-badge animate-fade-in">✨ v2.0 Platform Live</span>
+            <h1 class="animate-fade-in delay-100">Unlock Your Potential with <span class="text-gradient">Premium
+                    Learning</span></h1>
+            <p class="animate-fade-in delay-200">
+                Join our cutting-edge online course management system. Access top-tier materials, interactive
+                assignments, and track your progress with our immersive dashboard.
+            </p>
+            <div class="hero-cta animate-fade-in delay-300">
+                <a href="courses.html" class="btn btn-primary">
+                    Explore Courses <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i>
+                </a>
+                <a href="register.html" class="btn btn-outline">Start for free</a>
+            </div>
+        </div>
+
+        <!-- Hero Visual/Glass Card -->
+        <div class="glass-panel"
+            style="position: absolute; right: 5%; top: 50%; transform: translateY(-50%); width: 450px; padding: 2rem; border-radius: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="font-family: var(--font-heading); font-size: 1.25rem;">Popular Courses</h3>
+                <span style="color: var(--primary); font-size: 0.875rem;">View All</span>
+            </div>
+
+            <div
+                style="background: rgba(15, 23, 42, 0.4); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem;">
+                <div
+                    style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    🐍</div>
+                <div style="flex-grow: 1;">
+                    <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">Advanced Python</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);"><i class="fa-solid fa-star"
+                            style="color: #fbbf24; margin-right: 4px;"></i> 4.9 (1.2k reviews)</p>
+                </div>
+                <a href="{% url 'courses' %}" class="btn btn-primary"
+                    style="padding: 0.5rem 1rem; font-size: 0.875rem;">Enroll</a>
+            </div>
+
+            <div
+                style="background: rgba(15, 23, 42, 0.4); border-radius: 1rem; padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                <div
+                    style="width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                    ⚛️</div>
+                <div style="flex-grow: 1;">
+                    <h4 style="font-size: 1rem; margin-bottom: 0.25rem;">React Mastery</h4>
+                    <p style="font-size: 0.875rem; color: var(--text-muted);"><i class="fa-solid fa-star"
+                            style="color: #fbbf24; margin-right: 4px;"></i> 4.8 (850 reviews)</p>
+                </div>
+                <a href="{% url 'courses' %}" class="btn btn-primary"
+                    style="padding: 0.5rem 1rem; font-size: 0.875rem;">Enroll</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="{% static 'frontend_app/js/main.js' %}"></script>
+</body>
+
+</html>

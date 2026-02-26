@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Reviews - OCMS</title>
+    <link rel="stylesheet" href="{% static 'frontend_app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .review-header {
+            padding: 6rem 0 3rem;
+            text-align: center;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        .review-card {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .review-course {
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .review-comment {
+            font-style: italic;
+            color: var(--text-main);
+            line-height: 1.8;
+            flex-grow: 1;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <div class="nav-logo">
+                <a href="{% url 'home' %}"><i class="fa-solid fa-graduation-cap"></i><span>OCMS</span></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'courses' %}">Courses</a></li>
+                <li><a href="{% url 'reviews' %}" class="active">Reviews</a></li>
+            </ul>
+
+            <!-- Auth Buttons -->
+            <div class="nav-auth" id="nav-auth-container">
+                <a href="{% url 'login' %}" class="btn btn-outline">Log In</a>
+                <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
+            </div>
+
+            <!-- Logged In User Menu (Hidden by default) -->
+            <div class="nav-auth" id="nav-user-menu" style="display: none;">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Dashboard</a>
+                <button onclick="logout()" class="btn btn-primary">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="review-header animate-fade-in">
+            <span class="hero-badge">Student Feedback</span>
+            <h1>See What Our <span class="text-gradient">Community</span> Says</h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 1rem auto 0;">Real reviews from students who
+                have taken our courses and advanced their careers.</p>
+        </div>
+
+        <div class="review-grid">
+            {% if reviews %}
+            {% for review in reviews %}
+            <div class="glass-panel review-card animate-fade-in delay-100">
+                <div class="stars">
+                    <!-- Simple star generation based on rating -->
+                    {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= review.rating %} <i class="fa-solid fa-star"></i>
+                        {% else %}
+                        <i class="fa-regular fa-star"></i>
+                        {% endif %}
+                        {% endfor %}
+                </div>
+                <div class="review-course">{{ review.course_obj.title|default:"Unknown Course" }}</div>
+                <blockquote class="review-comment">"{{ review.comment }}"</blockquote>
+                <div class="review-author">
+                    <div class="avatar">S{{ review.student }}</div>
+                    <div>
+                        <div style="font-weight: 600;">Student User {{ review.student }}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">{{ review.created_at|date:"M d, Y" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-muted);">
+                <h3>No reviews are currently available.</h3>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'frontend_app/js/main.js' %}"></script>
+</body>
+
+</html>

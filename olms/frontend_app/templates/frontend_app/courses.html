@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - OCMS</title>
+    <link rel="stylesheet" href="{% static 'frontend_app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .courses-header {
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .search-bar {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-bar input {
+            padding-left: 3rem;
+            border-radius: var(--radius-full);
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        .course-card {
+            transition: var(--transition);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-glow);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-tag {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .course-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .course-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>OCMS</span>
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'courses' %}" class="active">Courses</a></li>
+                <li><a href="{% url 'reviews' %}">Reviews</a></li>
+                <li><a href="{% url 'enrollments' %}">Enrollments</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            </ul>
+
+            <div class="nav-auth" id="nav-user-menu">
+                <button onclick="logout()" class="btn btn-outline" style="border: none; padding: 0.5rem;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="courses-header animate-fade-in">
+            <span class="hero-badge">Browse Catalog</span>
+            <h1>Explore <span class="text-gradient">Premium Courses</span></h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Discover thousands of classes in
+                design, development, marketing, and more. Upgrade your skills today.</p>
+
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" class="form-control" placeholder="What do you want to learn?">
+            </div>
+        </div>
+
+        <!-- Course Grid -->
+        <div class="course-grid">
+            {% if courses %}
+            {% for course in courses %}
+            <!-- Dynamic Course Card -->
+            <div class="course-card glass-panel animate-fade-in delay-100">
+                <div class="course-thumbnail"
+                    style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2));">
+                    📚
+                </div>
+                <div class="course-content">
+                    <span class="course-tag">{{ course.level }}</span>
+                    <h3 class="course-title">{{ course.title }}</h3>
+                    <p class="course-desc">{{ course.description|truncatechars:100 }}</p>
+                    <div class="course-footer" style="flex-direction: column; gap: 1rem; align-items: stretch;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="course-meta"><i class="fa-solid fa-clock"></i> Self Paced</span>
+                            <span style="color: var(--primary); font-weight: 700;">${{ course.price }}</span>
+                        </div>
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-primary"
+                            style="text-align: center;">Enroll Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: var(--text-muted);">
+                <h3>No courses are currently available.</h3>
+                <p>Check back later for new premium content!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="{% static 'frontend_app/js/main.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Detail - OCMS</title>
+    <link rel="stylesheet" href="{% static 'frontend_app/css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: var(--bg-dark);
+            overflow: hidden;
+        }
+
+        .course-layout {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Syllabus Sidebar */
+        .syllabus {
+            width: 350px;
+            background: rgba(15, 23, 42, 0.95);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            flex-shrink: 0;
+        }
+
+        .syllabus-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .syllabus-header h2 {
+            font-size: 1.25rem;
+            font-family: var(--font-heading);
+            line-height: 1.2;
+        }
+
+        .syllabus-list {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding: 1rem;
+        }
+
+        .module-group {
+            margin-bottom: 1rem;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.02);
+            overflow: hidden;
+        }
+
+        .module-header {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: var(--text-main);
+        }
+
+        .lecture-list {
+            list-style: none;
+        }
+
+        .lecture-item {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .lecture-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .lecture-link:hover,
+        .lecture-link.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--text-main);
+        }
+
+        .lecture-link i {
+            font-size: 1rem;
+            color: var(--primary);
+        }
+
+        /* Main Viewing Area */
+        .viewer {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background-image: radial-gradient(circle at center, rgba(99, 102, 241, 0.05), transparent 70%);
+        }
+
+        .viewer-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .viewer-content {
+            padding: 3rem;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.6);
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .content-block {
+            background: var(--glass-bg);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            line-height: 1.8;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .content-block h1 {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="course-layout">
+        <!-- Sidebar Syllabus -->
+        <aside class="syllabus">
+            <div class="syllabus-header">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline"
+                    style="padding: 0.5rem; border: none; font-size:1.25rem;"><i class="fa-solid fa-arrow-left"></i></a>
+                <h2>{{ course.title|default:"Course Not Found" }}</h2>
+            </div>
+
+            <div class="syllabus-list">
+                {% if modules %}
+                {% for mod in modules %}
+                <div class="module-group">
+                    <div class="module-header">
+                        <span>Module: {{ mod.title }}</span>
+                        <i class="fa-solid fa-chevron-down" style="color: var(--text-muted); font-size: 0.75rem;"></i>
+                    </div>
+                    <ul class="lecture-list">
+                        {% if mod.lectures %}
+                        {% for lec in mod.lectures %}
+                        <li class="lecture-item">
+                            <a href="#" class="lecture-link">
+                                <i class="fa-regular fa-circle-play"></i>
+                                {{ lec.title }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li class="lecture-item"><span class="lecture-link"
+                                style="color: var(--text-muted); font-style: italic;">No lectures available.</span></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p style="text-align: center; color: var(--text-muted); padding: 2rem;">No modules available for this
+                    course yet.</p>
+                {% endif %}
+            </div>
+        </aside>
+
+        <!-- Main Viewer -->
+        <main class="viewer">
+            <header class="viewer-header">
+                <span class="hero-badge"
+                    style="margin: 0; background: transparent; border-color: var(--primary);">Course Viewer</span>
+                <button class="btn btn-primary" style="padding: 0.5rem 1rem;">Complete Lecture <i
+                        class="fa-solid fa-check" style="margin-left: 8px;"></i></button>
+            </header>
+
+            <div class="viewer-content animate-fade-in delay-100">
+                {% if course %}
+                <div class="video-placeholder">
+                    <div
+                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(236,72,153,0.2));">
+                    </div>
+                    <div class="play-btn"><i class="fa-solid fa-play" style="margin-left: 5px;"></i></div>
+                </div>
+
+                <div class="content-block">
+                    <h1>Course Content Overview</h1>
+                    <p>{{ course.description }}</p>
+                    <p style="margin-top: 1rem;">Select a lecture from the sidebar on the left to begin learning. As you
+                        progress, mark the lectures as completed using the button in the top right.</p>
+                </div>
+                {% else %}
+                <div class="content-block" style="text-align: center;">
+                    <h1>Course Not Found</h1>
+                    <p>The requested course does not exist or has been removed.</p>
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary" style="margin-top: 2rem;">Return to
+                        Dashboard</a>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
