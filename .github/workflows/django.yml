@@ -1,0 +1,32 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.11
+    
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # olms is the directory where manage.py and requirements.txt are?
+        # Wait, I put requirements.txt in the root.
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install gunicorn whitenoise
+        
+    - name: Run Checks
+      run: |
+        cd olms
+        python manage.py check
